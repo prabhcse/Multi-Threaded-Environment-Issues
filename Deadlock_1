@@ -1,0 +1,80 @@
+// Shows a classic deadlock example
+// to remove deadlock, make the order of object locks same, keep (obj1 , obj2) or (obj2 , obj1)
+public class Deadlock_1 {
+
+	public static void main(String[] args) {
+		B b = new B();
+		
+		Thread t1 = new Thread(new A(b));
+		Thread t2 = new Thread(new Z(b));
+		t1.start();
+		t2.start();
+	}
+
+}
+
+class A implements Runnable
+{
+	B b;
+	
+	public A(B b)
+	{
+		this.b = b;
+	}
+	
+	public void run()
+	{
+		b.method_1();
+	}
+}
+
+class Z implements Runnable
+{
+	B b;
+	
+	public Z(B b)
+	{
+		this.b = b; 
+	}
+	
+	public void run()
+	{
+		b.method_2();
+	}
+}
+
+// The order in the use of synchronized 
+
+class B
+{
+	Object obj1 = new Object();
+	Object obj2 = new Object();
+	
+	public void method_1()
+	{
+		synchronized(obj1)
+		{
+			System.out.println("\n Holds Only 1");
+			synchronized(obj2)
+			{
+				System.out.println("\n Holds both 1 & 2");
+			}
+			
+		}
+		
+	}
+	
+	public void method_2()
+	{
+		synchronized(obj2)
+		{
+			System.out.println("\n Holds Only 2");
+			synchronized(obj1)
+			{
+				System.out.println("\n Holds both 1 & 2");
+			}
+			
+		}
+	}
+	
+}
