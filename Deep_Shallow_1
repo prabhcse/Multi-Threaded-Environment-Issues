@@ -1,0 +1,43 @@
+// shows the difference between deep cpoy and shallow copy
+public class Deep_Shallow_1 {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		
+		int[] vals = {1,2,3};
+		Deep d = new Deep(vals);
+		Shallow s = new Shallow(vals);
+		
+		vals[0] = 900;
+		
+		System.out.println("\n Deep:"+d.data[0]+", Shallow:"+s.data[0]);
+
+	}
+
+}
+
+class Deep
+{
+	int data[];
+	
+	public Deep(int[] d)
+	{
+		data = new int[d.length];
+		for(int i = 0; i < d.length; i++)
+		{
+			data[i] = d[i];
+		}
+	}
+}
+
+class Shallow
+{
+	int data[];
+	
+	public Shallow(int[] d)
+	{
+		data = d;
+	}
+}
