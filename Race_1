@@ -1,0 +1,63 @@
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Race_1 {
+
+	
+	public static void main(String[] args) {
+		Account a = new Account();
+		
+		Thread t1 = new Thread(new Counter(a));
+		Thread t2 = new Thread(new Counter(a));
+		
+		t1.start();
+		t2.start();
+		try{
+			t1.join();
+			t2.join();
+		}
+		catch(InterruptedException e)
+		{
+			System.out.println("\n Exception:"+e.getMessage());
+		}
+		
+		System.out.println("\n Final Balance:"+a.getBalance());
+	}
+
+}
+
+class Counter implements Runnable
+{
+	Account a;
+	
+	public Counter(Account a)
+	{
+		this.a = a;
+	}
+	
+	public void run()
+	{
+		for(int i = 1; i <= 1000000; i++)
+			a.increment();
+	}
+}
+
+class Account
+{
+	private int balance = 0;
+	Lock lock = new ReentrantLock();
+	
+	// Can use either synchronized or lock
+	
+	public void increment()
+	{
+//		lock.lock();          // Uncomment to disable race condition
+		balance++;
+//		lock.unlock();        // Uncomment to disable race condition
+	}
+	
+	public int getBalance()
+	{
+		return balance;
+	}
+}
